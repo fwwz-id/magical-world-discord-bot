@@ -16,7 +16,7 @@ model Hero {
 
   name    String @unique
   role    HeroRole
-  element Element
+  element HeroElement
 
   owners UserHeroCollection[]
 
@@ -59,35 +59,35 @@ model UserHeroCollection {
 }
 
 enum HeroRole {
-  HEALER
-  DAMAGE_DEALER
-  GUARDIAN
-  SUPPORT
+  Healer
+  Damage_Dealer
+  Guardian
+  Support
 }
 
-enum Element {
-  WATER
-  FIRE
-  WIND
-  EARTH
+enum HeroElement {
+  Water
+  Fire
+  Wind
+  Earth
 
-  ICE
-  INFERNO
-  CYCLONE
-  MUD
+  Ice
+  Inferno
+  Cyclone
+  Mud
 
-  FROST
-  PLASMA
-  TEMPEST
-  SAND
+  Frost
+  Plasma
+  Tempest
+  Sand
 
-  GLACIER
-  PHOENIX
-  HURRICANE
-  ROCK
+  Glacier
+  Phoenix
+  Hurricane
+  Rock
 
-  TSUNAMI
-  SUPERNOVA
-  WHIRLWIND
-  TITAN
+  Tsunami
+  Supernova
+  Whirlwind
+  Titan
 }

@@ -1,15 +1,15 @@
 -- CreateEnum
-CREATE TYPE "HeroRole" AS ENUM ('HEALER', 'DAMAGE_DEALER', 'GUARDIAN', 'SUPPORT');
+CREATE TYPE "HeroRole" AS ENUM ('Healer', 'Damage_Dealer', 'Guardian', 'Support');
 
 -- CreateEnum
-CREATE TYPE "Element" AS ENUM ('WATER', 'FIRE', 'WIND', 'EARTH', 'ICE', 'INFERNO', 'CYCLONE', 'MUD', 'FROST', 'PLASMA', 'TEMPEST', 'SAND', 'GLACIER', 'PHOENIX', 'HURRICANE', 'ROCK', 'TSUNAMI', 'SUPERNOVA', 'WHIRLWIND', 'TITAN');
+CREATE TYPE "HeroElement" AS ENUM ('Water', 'Fire', 'Wind', 'Earth', 'Ice', 'Inferno', 'Cyclone', 'Mud', 'Frost', 'Plasma', 'Tempest', 'Sand', 'Glacier', 'Phoenix', 'Hurricane', 'Rock', 'Tsunami', 'Supernova', 'Whirlwind', 'Titan');
 
 -- CreateTable
 CREATE TABLE "heroes" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "role" "HeroRole" NOT NULL,
-    "element" "Element" NOT NULL,
+    "element" "HeroElement" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
