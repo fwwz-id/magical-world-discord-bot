@@ -1,49 +1,48 @@
-import { Element, HeroRole } from "@prisma/client";
+import { HeroElement, HeroRole } from "@prisma/client";
 
 import BaseSeeder from "@base/BaseSeeder";
 
 import HeroModel from "./HeroModel";
 
-type HeroNameBasedOnElement = { [key in Element]: [string, HeroRole] };
+type Heroes = { name: string; element: HeroElement; role: HeroRole }[];
+
+// prettier-ignore
+const HEROES: Heroes = [
+  // Healer
+  { name: "Aqua",         element: HeroElement.Water,       role: HeroRole.Healer },
+  { name: "Seraphina",    element: HeroElement.Ice,         role: HeroRole.Healer },
+  { name: "Winterbloom",  element: HeroElement.Frost,       role: HeroRole.Healer },
+  { name: "Ymir",         element: HeroElement.Glacier,     role: HeroRole.Healer },
+  { name: "Leviathan",    element: HeroElement.Tsunami,     role: HeroRole.Healer },
+  // Damage Dealer
+  { name: "Ember",        element: HeroElement.Fire,        role: HeroRole.Damage_Dealer },
+  { name: "Cinderheart",  element: HeroElement.Inferno,     role: HeroRole.Damage_Dealer },
+  { name: "Voltar",       element: HeroElement.Plasma,      role: HeroRole.Damage_Dealer },
+  { name: "Ignis",        element: HeroElement.Phoenix,     role: HeroRole.Damage_Dealer },
+  { name: "Sol",          element: HeroElement.Supernova,   role: HeroRole.Damage_Dealer },
+  // Guardian
+  { name: "Stonewall",    element: HeroElement.Earth,       role: HeroRole.Guardian },
+  { name: "Boggart",      element: HeroElement.Mud,         role: HeroRole.Guardian },
+  { name: "Dune Strider", element: HeroElement.Sand,        role: HeroRole.Guardian },
+  { name: "Atlas",        element: HeroElement.Rock,        role: HeroRole.Guardian },
+  { name: "Gaia",         element: HeroElement.Titan,       role: HeroRole.Guardian },
+  // Support
+  { name: "Zephyr",       element: HeroElement.Wind,        role: HeroRole.Support },
+  { name: "Stormcaller",  element: HeroElement.Cyclone,     role: HeroRole.Support },
+  { name: "Nimbus",       element: HeroElement.Tempest,     role: HeroRole.Support },
+  { name: "Maelstrom",    element: HeroElement.Hurricane,   role: HeroRole.Support },
+  { name: "Typhoon",      element: HeroElement.Whirlwind,   role: HeroRole.Support },
+];
 
 export default class HeroSeeder extends BaseSeeder {
-  _HEROES: HeroNameBasedOnElement = {
-    WATER: ["Aqua", HeroRole.HEALER],
-    FIRE: ["Ember", HeroRole.DAMAGE_DEALER],
-    WIND: ["Zephyr", HeroRole.SUPPORT],
-    EARTH: ["Stonewall", HeroRole.GUARDIAN],
-
-    ICE: ["Seraphina", HeroRole.HEALER],
-    INFERNO: ["Cinderheart", HeroRole.DAMAGE_DEALER],
-    CYCLONE: ["Stormcaller", HeroRole.SUPPORT],
-    MUD: ["Boggart", HeroRole.GUARDIAN],
-
-    FROST: ["Winterbloom", HeroRole.HEALER],
-    PLASMA: ["Voltar", HeroRole.DAMAGE_DEALER],
-    TEMPEST: ["Nimbus", HeroRole.SUPPORT],
-    SAND: ["Dune Strider", HeroRole.GUARDIAN],
-
-    GLACIER: ["Ymir", HeroRole.HEALER],
-    PHOENIX: ["Ignis", HeroRole.DAMAGE_DEALER],
-    HURRICANE: ["Maelstrom", HeroRole.SUPPORT],
-    ROCK: ["Atlas", HeroRole.GUARDIAN],
-
-    TSUNAMI: ["Leviathan", HeroRole.HEALER],
-    SUPERNOVA: ["Sol", HeroRole.DAMAGE_DEALER],
-    WHIRLWIND: ["Typhoon", HeroRole.SUPPORT],
-    TITAN: ["Gaia", HeroRole.GUARDIAN],
-  };
-
   async seed() {
-    const elements = Object.keys(this._HEROES) as Element[];
-
     return Promise.all(
-      elements.map(async (element) => {
+      HEROES.map(async (hero) => {
         return new HeroModel().model.create({
           data: {
-            name: this._HEROES[element][0],
-            role: this._HEROES[element][1],
-            element,
+            name: hero.name,
+            role: hero.role,
+            element: hero.element,
           },
         });
       })

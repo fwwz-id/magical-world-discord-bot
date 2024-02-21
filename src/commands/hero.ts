@@ -1,9 +1,12 @@
-import BaseCommand from "@base/BaseCommand";
+import { HeroRole } from "@prisma/client";
 import {
   type CacheType,
   type ChatInputCommandInteraction,
   SlashCommandBuilder,
 } from "discord.js";
+
+import BaseCommand from "@base/BaseCommand";
+import HeroResponseBuilder from "@features/hero/HeroResponseBuilder";
 
 class HeroCommand extends BaseCommand {
   data() {
@@ -13,14 +16,25 @@ class HeroCommand extends BaseCommand {
       .addStringOption((opt) =>
         opt.setName("name").setDescription("Get detail hero by hero name")
       )
-      .addNumberOption((opt) =>
-        opt.setName("page").setDescription("View specific page")
-      ) as SlashCommandBuilder;
+      .addStringOption((command) => {
+        const options = command
+          .setName("category")
+          .setDescription("Get heroes by category");
+
+        Object.values(HeroRole).forEach((role) =>
+          options.addChoices({ name: role, value: role })
+        );
+
+        return options;
+      }) as SlashCommandBuilder;
   }
 
   async interact(interaction: ChatInputCommandInteraction<CacheType>) {
+    const response = new HeroResponseBuilder(interaction);
+    const heroes = await response.getHeroesResponse();
+
     await interaction.reply({
-      content: "This is Heroes",
+      embeds: [heroes],
       ephemeral: true,
     });
   }
