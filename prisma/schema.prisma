@@ -1,0 +1,93 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Hero {
+  id String @id @default(cuid())
+
+  name    String @unique
+  role    HeroRole
+  element Element
+
+  owners UserHeroCollection[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("heroes")
+}
+
+model User {
+  id String @id @default(uuid()) @db.Uuid
+
+  level  Int @default(1)
+  xp     Int @default(0)
+  nextXp Int
+
+  heroOwned UserHeroCollection[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("users")
+}
+
+model UserHeroCollection {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  heroId String
+
+  level Int @default(1)
+  power Int
+
+  User User @relation(fields: [userId], references: [id])
+  Hero Hero @relation(fields: [heroId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("user_hero_collection")
+}
+
+enum HeroRole {
+  HEALER
+  DAMAGE_DEALER
+  GUARDIAN
+  SUPPORT
+}
+
+enum Element {
+  WATER
+  FIRE
+  WIND
+  EARTH
+
+  ICE
+  INFERNO
+  CYCLONE
+  MUD
+
+  FROST
+  PLASMA
+  TEMPEST
+  SAND
+
+  GLACIER
+  PHOENIX
+  HURRICANE
+  ROCK
+
+  TSUNAMI
+  SUPERNOVA
+  WHIRLWIND
+  TITAN
+}

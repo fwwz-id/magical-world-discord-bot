@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "commonjs",
+    "moduleResolution": "node10",
+    "baseUrl": "./",
+    "paths": {
+      "@base/*": ["src/base/*"],
+      "@commands/*": ["src/commands/*"],
+      "@config/*": ["src/config/*"],
+      "@exception/*": ["src/exception/*"],
+      "@features/*": ["src/features/*"],
+      "@lib/*": ["src/lib/*"],
+      "@utils/*": ["src/utils/*"],
+    },                                   
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "exclude": ["node_modules/", "build/"]
+}
