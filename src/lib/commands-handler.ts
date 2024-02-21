@@ -3,7 +3,7 @@ import { Collection, Routes } from "discord.js";
 
 import type BaseCommand from "@base/BaseCommand";
 import commands, { type ExportCommandsKey } from "@commands/index";
-import { LogicalException, TypeException } from "@exception/index";
+import { AssertException, LogicalException, TypeException } from "@exception/index";
 
 import { DC_APP_ID, DC_GUILD_ID } from "@config/base";
 import { rest } from "@config/discord";
@@ -82,7 +82,7 @@ export default class CommandsHandler {
     return this;
   }
 
-  async commandDev(): Promise<unknown[]> {
+  async commandDev() {
     const data = await rest.put(
       Routes.applicationGuildCommands(DC_APP_ID, DC_GUILD_ID),
       {
@@ -113,8 +113,8 @@ export default class CommandsHandler {
     value: unknown
   ): asserts value is RESTApplicationCommandsResponse[] {
     if (!Array.isArray(value))
-      throw new TypeException(
-        `Expected to be Array, but got this instead ${JSON.stringify(value)}`
+      throw new AssertException(
+        `Expected to be Array, but got this instead : ${JSON.stringify(value)}`
       );
   }
 }

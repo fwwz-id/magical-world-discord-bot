@@ -23,7 +23,7 @@ bot.client.on("interactionCreate", async (interaction) => {
   const command = commands.get(interaction.commandName);
 
   if (command instanceof BaseCommand) {
-    await command.interact(interaction);
+    await command.interact(interaction, bot.client);
   }
 });
 

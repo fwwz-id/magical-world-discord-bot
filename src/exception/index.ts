@@ -33,3 +33,14 @@ export class TypeException extends BaseException {
     if (message) this.reason = `${this.reason}, ${message}`;
   }
 }
+
+export class AssertException extends BaseException {
+  code = 500;
+  reason = "Assertion Error";
+
+  constructor(message?: string) {
+    super();
+
+    if (message) this.reason = `${this.reason}, ${message}`;
+  }
+}
