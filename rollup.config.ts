@@ -13,12 +13,14 @@ export default defineConfig({
     typescript({
       module: "esnext",
     }),
-    terser(),
+    process.env.NODE_ENV == "production" && terser(),
   ],
   external: [
     "dotenv/config",
     "discord.js",
     "module-alias/register",
+    "@prisma/client",
+    "@prisma/extension-accelerate",
     "path",
     "fs",
   ],
