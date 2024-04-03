@@ -1,6 +1,6 @@
 {
   "name": "magical-world-discord-bot",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Discord bot",
   "main": "index.js",
   "author": "Fawwaz Abdurrahim <fwwz.id@proton.me>",
@@ -13,7 +13,8 @@
     "dev": "nodemon src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rollup --config rollup.config.ts --bundleConfigAsCjs",
-    "format": "prettier --write src/**/*.ts && eslint --fix ."
+    "format": "prettier --write src/**/*.ts && eslint --fix .",
+    "release": "standard-version"
   },
   "dependencies": {
     "@prisma/client": "^5.9.1",
@@ -39,6 +40,7 @@
     "nodemon": "^3.0.3",
     "prettier": "^3.2.5",
     "rollup": "^4.11.0",
+    "standard-version": "^9.5.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
     "typescript-eslint": "^7.0.2"
