@@ -14,33 +14,33 @@ abstract class BaseException extends Error implements BaseErrorImpl {
 
 export class LogicalException extends BaseException {
   code = 500;
-  reason = "Logical Fault Exception";
+  reason = "[Logical Fault Exception]";
 
   constructor(message?: string) {
     super();
 
-    if (message) this.reason = `${this.reason}, ${message}`;
+    if (message) this.reason = `${this.reason}: ${message}`;
   }
 }
 
 export class TypeException extends BaseException {
   code = 500;
-  reason = "Invalid Type";
+  reason = "[Invalid Type]";
 
   constructor(message?: string) {
     super();
 
-    if (message) this.reason = `${this.reason}, ${message}`;
+    if (message) this.reason = `${this.reason}: ${message}`;
   }
 }
 
 export class AssertException extends BaseException {
   code = 500;
-  reason = "Assertion Error";
+  reason = "[Assertion Error]";
 
   constructor(message?: string) {
     super();
 
-    if (message) this.reason = `${this.reason}, ${message}`;
+    if (message) this.reason = `${this.reason}: ${message}`;
   }
 }
