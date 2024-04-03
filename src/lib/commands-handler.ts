@@ -3,13 +3,17 @@ import { Collection, Routes } from "discord.js";
 
 import type BaseCommand from "@base/BaseCommand";
 import commands, { type ExportCommandsKey } from "@commands/index";
-import { AssertException, LogicalException, TypeException } from "@exception/index";
+import {
+  AssertException,
+  LogicalException,
+  TypeException,
+} from "@exception/index";
 
 import { DC_APP_ID, DC_GUILD_ID } from "@config/base";
 import { rest } from "@config/discord";
 
 import getFilenamesFromDir from "@utils/getFilenamesFromDir";
-import { isProd } from "@utils/is";
+import { isProd, isString } from "@utils/is";
 
 type ApplicationCommandOptions = {
   /** this should be an enum, don't know yet what values are */
@@ -41,23 +45,36 @@ export default class CommandsHandler {
 
   private _commandDir = path.join(process.cwd(), "/src/commands");
 
+  /**
+   * collecting all commands from src/commands folder
+   *
+   * @returns
+   */
   collectCommands() {
+    const ERROR_MSG = "Error registering file ";
+
     const filenames = getFilenamesFromDir(this._commandDir);
 
     filenames.forEach((filename) => {
       const _filename = filename.split(".").shift();
 
+      const currFile = path.join(this._commandDir, filename);
+
       if (!_filename) {
-        throw new LogicalException(
-          "Error registering file " + this._commandDir
-        );
+        throw new LogicalException(ERROR_MSG + currFile);
       }
 
       if (!this.isExportCommandsKey(_filename)) {
-        throw new TypeException("Error registering file " + this._commandDir);
+        throw new TypeException(ERROR_MSG + currFile);
       }
 
-      this.commands.set(commands[_filename].data().name, commands[_filename]);
+      const commandsName = commands[_filename].data().name;
+
+      if (isString(commandsName))
+        this.commands.set(commandsName, commands[_filename]);
+
+      if (!isString(commandsName))
+        throw new LogicalException(ERROR_MSG + currFile);
     });
 
     return this;

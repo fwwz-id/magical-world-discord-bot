@@ -1,6 +1,7 @@
 import { LogicalException } from "@exception/index";
 
 export default abstract class BaseModel {
+  protected abstract name: string;
   protected abstract _model: unknown;
 
   get model() {
