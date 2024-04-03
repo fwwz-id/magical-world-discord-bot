@@ -14,9 +14,10 @@ datasource db {
 model Hero {
   id String @id @default(cuid())
 
-  name    String @unique
+  name    String      @unique
   role    HeroRole
   element HeroElement
+  rarity  HeroRarity
 
   owners UserHeroCollection[]
 
@@ -27,8 +28,9 @@ model Hero {
 }
 
 model User {
-  id String @id @default(uuid()) @db.Uuid
-
+  id        String @id @default(uuid()) @db.Uuid
+  discordId String @unique
+  
   level  Int @default(1)
   xp     Int @default(0)
   nextXp Int
@@ -90,4 +92,12 @@ enum HeroElement {
   Supernova
   Whirlwind
   Titan
+}
+
+enum HeroRarity {
+  Common
+  Rare
+  Epic
+  Legendary
+  Mythical
 }

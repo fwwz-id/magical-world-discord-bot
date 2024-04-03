@@ -4,12 +4,16 @@ CREATE TYPE "HeroRole" AS ENUM ('Healer', 'Damage_Dealer', 'Guardian', 'Support'
 -- CreateEnum
 CREATE TYPE "HeroElement" AS ENUM ('Water', 'Fire', 'Wind', 'Earth', 'Ice', 'Inferno', 'Cyclone', 'Mud', 'Frost', 'Plasma', 'Tempest', 'Sand', 'Glacier', 'Phoenix', 'Hurricane', 'Rock', 'Tsunami', 'Supernova', 'Whirlwind', 'Titan');
 
+-- CreateEnum
+CREATE TYPE "HeroRarity" AS ENUM ('Common', 'Rare', 'Epic', 'Legendary', 'Mythical');
+
 -- CreateTable
 CREATE TABLE "heroes" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "role" "HeroRole" NOT NULL,
     "element" "HeroElement" NOT NULL,
+    "rarity" "HeroRarity" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -19,6 +23,7 @@ CREATE TABLE "heroes" (
 -- CreateTable
 CREATE TABLE "users" (
     "id" UUID NOT NULL,
+    "discordId" TEXT NOT NULL,
     "level" INTEGER NOT NULL DEFAULT 1,
     "xp" INTEGER NOT NULL DEFAULT 0,
     "nextXp" INTEGER NOT NULL,
@@ -43,6 +48,9 @@ CREATE TABLE "user_hero_collection" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "heroes_name_key" ON "heroes"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_discordId_key" ON "users"("discordId");
 
 -- AddForeignKey
 ALTER TABLE "user_hero_collection" ADD CONSTRAINT "user_hero_collection_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
