@@ -6,7 +6,7 @@ import {
 } from "discord.js";
 
 import BaseCommand from "@base/BaseCommand";
-import HeroResponseBuilder from "@features/hero/HeroResponseBuilder";
+import HeroResponse from "@features/hero/HeroResponse";
 
 class HeroCommand extends BaseCommand {
   data() {
@@ -26,16 +26,15 @@ class HeroCommand extends BaseCommand {
         );
 
         return options;
-      }) as SlashCommandBuilder;
+      });
   }
 
   async interact(interaction: ChatInputCommandInteraction<CacheType>) {
-    const response = new HeroResponseBuilder(interaction);
-    const heroes = await response.getHeroesResponse();
+    const response = new HeroResponse(interaction);
+    const heroes = await response.getResponse();
 
     await interaction.reply({
       embeds: [heroes],
-      ephemeral: true,
     });
   }
 }
