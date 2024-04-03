@@ -2,9 +2,12 @@ import {
   type CacheType,
   type ChatInputCommandInteraction,
   SlashCommandBuilder,
+  codeBlock,
 } from "discord.js";
 
-import BaseCommand from "@base/BaseCommand";
+import BaseCommand, {
+  type BaseCommandInteractOptions,
+} from "@base/BaseCommand";
 
 class PingCommand extends BaseCommand {
   data() {
@@ -13,13 +16,21 @@ class PingCommand extends BaseCommand {
       .setDescription("Get server response and latency");
   }
 
-  async interact(interaction: ChatInputCommandInteraction<CacheType>) {
+  async interact(
+    interaction: ChatInputCommandInteraction<CacheType>,
+    opts: BaseCommandInteractOptions
+  ) {
+    const { client } = opts;
+
     const latency = {
+      API: client?.ws.ping,
       bot: Date.now() - interaction.createdTimestamp,
     };
 
     await interaction.reply({
-      content: `Latency : ${latency.bot}ms`,
+      content: codeBlock(
+        "API : " + latency.API + "ms\n" + "Latency : " + latency.bot + "ms"
+      ),
     });
   }
 }
