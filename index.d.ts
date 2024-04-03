@@ -1,5 +1,3 @@
-import type { Collection, Client as DiscordClient } from "discord.js";
-
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
@@ -12,10 +10,6 @@ declare global {
       DIRECT_URL?: string;
     }
   }
-
-  export class Client extends DiscordClient {
-    public commands: Collection
-  } 
 }
 
 // If this file has no import/export statements (i.e. is a script)
