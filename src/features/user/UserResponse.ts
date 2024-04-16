@@ -7,13 +7,28 @@ export default class UserResponse<T extends ChatInputCommandInteraction> {
   constructor() {}
 
   static async getJoinResponse({ discordId, username }: DiscordIdAndUsername) {
-    const response = await UserService.buildJoinResponse({
+    const embed = await UserService.buildJoinResponse({
       discordId,
       username,
     });
 
-    return response;
+    return embed;
   }
 
   getProfileResponse() {}
+
+  static async getDeleteAccountConfirmationResponse(discordId: string) {
+    const { action, embed } =
+      await UserService.buildDeleteAccountConfirmationResponse(discordId);
+
+    return { embed, action };
+  }
+
+  static getDeleteAccountDeletedResponse() {
+    return UserService.buildDeleteAccountDeletedResponse();
+  }
+
+  static getDeleteAccountCanceledResponse() {
+    return UserService.buildDeleteAccountCanceledResponse();
+  }
 }

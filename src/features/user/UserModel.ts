@@ -24,7 +24,7 @@ export default class UserModel extends BaseModel {
     return this._model;
   }
 
-  async getUserByIdAndDiscordId({
+  async getUserByIdOrDiscordId({
     id,
     discordId,
   }: {
@@ -47,5 +47,9 @@ export default class UserModel extends BaseModel {
 
   update() {}
 
-  delete() {}
+  async delete({ id, discordId }: { id?: string; discordId: string }) {
+    return await this.model.delete({
+      where: { id, discordId },
+    });
+  }
 }

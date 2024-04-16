@@ -2,8 +2,10 @@ import { default as ping } from "./ping";
 import { default as hero } from "./hero";
 import { default as profile } from "./profile";
 import { default as join } from "./join";
+import { default as delete_account } from "./delete-account";
 
 const commands = {
+  "delete-account": delete_account,
   ping,
   hero,
   profile,
