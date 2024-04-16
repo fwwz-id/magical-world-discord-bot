@@ -10,4 +10,13 @@ export default class CommonResponse {
       .setColor(colors.red)
       .setDescription("Unknown error, please contact developer.");
   }
+
+  static buildUnregisteredResponse() {
+    const embed = new EmbedBuilder();
+
+    return embed.setTitle("Whoops :)").setColor(colors.red)
+      .setDescription(`Looks like you haven't registered yet.
+      To join the adventure and use game commands, type **/join**
+      to begin your journey.`);
+  }
 }
