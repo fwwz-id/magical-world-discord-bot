@@ -38,6 +38,10 @@ For example, a Water (Level 2) hero would inflict bonus damage on an Earth (Leve
 
 This system encourages players to consider elemental matchups when building their teams and choosing targets in combat, adding a layer of strategic complexity to the gameplay experience.
 
+![element-system-diagram](image/element-system-diagram.png)
+
+![element-damage-bonus](image/element-damage-bonus.png)
+
 ## Hero Roles and Categories
 
 Heroes are further categorized based on their primary role and combat function:
