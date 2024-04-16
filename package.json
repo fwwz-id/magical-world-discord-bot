@@ -61,7 +61,7 @@
     "pre-commit": "lint-staged"
   },
   "lint-staged": {
-    "*.js": [
+    "*.ts": [
       "prettier --write src/**/*.ts",
       "eslint --fix ."
     ]
