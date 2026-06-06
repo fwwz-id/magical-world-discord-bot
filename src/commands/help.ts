@@ -13,6 +13,7 @@ import { default as join } from "./join";
 import { default as deleteAccount } from "./delete-account";
 import { default as myHeroes } from "./my-heroes";
 import { default as quest } from "./quest";
+import { default as summon } from "./summon";
 
 const gameCommands = [
   ping,
@@ -22,6 +23,7 @@ const gameCommands = [
   deleteAccount,
   myHeroes,
   quest,
+  summon,
 ];
 
 const QUEST_SUBCOMMANDS = [
@@ -29,6 +31,11 @@ const QUEST_SUBCOMMANDS = [
   "**/quest idle start** — Start a one-hour idle expedition",
   "**/quest idle claim** — Claim idle expedition rewards",
   "**/quest story** — Preview story mode and roadmap",
+];
+
+const SUMMON_SUBCOMMANDS = [
+  "**/summon pull** — Summon a random hero for 100 gold",
+  "**/summon rates** — View summon rarity rates and cost",
 ];
 
 class HelpCommand extends BaseCommand {
@@ -42,12 +49,12 @@ class HelpCommand extends BaseCommand {
     interaction: ChatInputCommandInteraction<CacheType>
   ): Promise<void> {
     const lines = gameCommands
-      .filter((command) => command !== quest)
+      .filter((command) => command !== quest && command !== summon)
       .map((command) => {
         const data = command.data();
         return `**/${data.name}** — ${data.description}`;
       })
-      .concat(QUEST_SUBCOMMANDS)
+      .concat(QUEST_SUBCOMMANDS, SUMMON_SUBCOMMANDS)
       .sort();
 
     const embed = new EmbedBuilder()

@@ -45,6 +45,7 @@ export default class UserResponse {
           "- **/my-heroes** - your hero roster",
           "- **/hero** - browse the hero catalogue",
           "- **/quest daily** - daily missions",
+          "- **/summon pull** - spend gold to summon heroes",
         ].join("\n")}
 
       Use **/help** to see all available commands.`
