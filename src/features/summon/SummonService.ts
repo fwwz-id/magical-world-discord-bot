@@ -11,7 +11,11 @@ export type SummonResult =
   | { ok: true; hero: Hero; goldRemaining: number };
 
 export default class SummonService {
-  private model = new SummonModel();
+  private model: SummonModel;
+
+  constructor(model = new SummonModel()) {
+    this.model = model;
+  }
 
   async summon(discordId: string): Promise<SummonResult> {
     const user = await this.model.getUserByDiscordId(discordId);
