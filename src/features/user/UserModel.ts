@@ -31,8 +31,22 @@ export default class UserModel extends BaseModel {
     id?: string;
     discordId: string;
   }) {
+    if (id) {
+      return await this.model.findUnique({ where: { id } });
+    }
+
+    return await this.model.findUnique({ where: { discordId } });
+  }
+
+  async getUserWithHeroes(discordId: string) {
     return await this.model.findUnique({
-      where: { id, discordId },
+      where: { discordId },
+      include: {
+        heroOwned: {
+          include: { Hero: true },
+          orderBy: { power: "desc" },
+        },
+      },
     });
   }
 

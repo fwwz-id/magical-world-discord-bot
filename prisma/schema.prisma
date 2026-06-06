@@ -30,17 +30,57 @@ model Hero {
 model User {
   id        String @id @default(uuid()) @db.Uuid
   discordId String @unique
-  
+
   level  Int @default(1)
   xp     Int @default(0)
   nextXp Int
+  gold   Int @default(0)
 
-  heroOwned UserHeroCollection[]
+  heroOwned        UserHeroCollection[]
+  dailyQuests      DailyQuestProgress[]
+  idleQuest        IdleQuest?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
   @@map("users")
+}
+
+model DailyQuestProgress {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  date   String
+
+  mission1Completed Boolean @default(false)
+  mission1Claimed   Boolean @default(false)
+  mission2Completed Boolean @default(false)
+  mission2Claimed   Boolean @default(false)
+  mission3Completed Boolean @default(false)
+  mission3Claimed   Boolean @default(false)
+
+  User User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@unique([userId, date])
+  @@map("daily_quest_progress")
+}
+
+model IdleQuest {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @unique @db.Uuid
+
+  startedAt DateTime
+  endsAt    DateTime
+  claimed   Boolean @default(false)
+
+  User User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("idle_quests")
 }
 
 model UserHeroCollection {

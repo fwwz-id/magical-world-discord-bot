@@ -1,129 +1,89 @@
-import {
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  EmbedBuilder,
-} from "discord.js";
-import { type User } from "@prisma/client";
+import { HeroRarity } from "@prisma/client";
 
 import UserModel from "./UserModel";
+import UserHeroModel from "./UserHeroModel";
+import HeroModel from "@features/hero/HeroModel";
 
 import type { DiscordIdAndUsername } from "./UserType";
-import CommonResponse from "@features/common/CommonResponse";
-import colors from "@utils/colors";
+import { SQUAD_LIMIT } from "@utils/heroPower";
+
+export type JoinResult =
+  | { status: "already_joined" }
+  | { status: "welcome"; username: string; starterHeroName: string | null };
+
+export type ProfileData = {
+  username: string;
+  level: number;
+  xp: number;
+  nextXp: number;
+  gold: number;
+  squadCount: number;
+  totalPower: number;
+};
 
 export default class UserService {
-  private static _name = "UserService";
-
-  static async buildJoinResponse({
+  static async join({
     discordId,
     username,
-  }: DiscordIdAndUsername) {
+  }: DiscordIdAndUsername): Promise<JoinResult> {
     const userModel = new UserModel();
-    const embed = new EmbedBuilder().setColor(colors.sky);
-
-    let isJoined: User | null = null;
-
-    try {
-      isJoined = await userModel.getUserByIdOrDiscordId({ discordId });
-
-      if (!isJoined)
-        await userModel.create({
-          discordId,
-        });
-    } catch (err) {
-      throw err;
-    }
+    const isJoined = await userModel.getUserByIdOrDiscordId({ discordId });
 
     if (isJoined) {
-      return embed.setTitle("Hi")
-        .setDescription(`You've already been registered, Do you want to delete your progress?
-        If so, please use **/delete-account** to delete your current progress.`);
+      return { status: "already_joined" };
     }
 
-    return embed.setTitle("Welcome!")
-      .setDescription(`A portal shimmers open, and a new adventurer steps forth!
-      Welcome,  **[${username}]**, to the realms of magic!.
-      
-      Here some commands may help you :
-        ${[
-          "- **/quest** - your quest info",
-          "- **/profile** - your profile info (level, xp, etc)",
-          "- **/inventory** - your equipment info",
-          "- **/heroes** - your heroes info",
-        ].join("\n")}
+    const user = await userModel.create({ discordId });
+    const starterHeroName = await this._grantStarterHero(user.id);
 
-      You can start your journey by **/help** commands to see all the available commands,
-      `);
+    return { status: "welcome", username, starterHeroName };
   }
 
-  static async buildDeleteAccountConfirmationResponse(discordId: string) {
-    const userModel = new UserModel();
-    let embed = new EmbedBuilder(),
-      action: ActionRowBuilder<ButtonBuilder> | null =
-        this.buildDeleteAccountAction();
+  static async getProfile(
+    discordId: string,
+    username: string
+  ): Promise<ProfileData | null> {
+    const user = await new UserModel().getUserWithHeroes(discordId);
 
-    try {
-      const user = await userModel.getUserByIdOrDiscordId({ discordId });
+    if (!user) return null;
 
-      if (!user) {
-        embed = CommonResponse.buildUnregisteredResponse();
-        action = null;
+    const totalPower = user.heroOwned.reduce((sum, { power }) => sum + power, 0);
 
-        return { embed, action };
-      }
-
-      embed
-        .setTitle("Are you sure?")
-        .setColor(colors.red)
-        .setDescription(
-          `**Warning**: Clicking **"confirm"** will permanently delete your account.
-          If you don't select within 1 minute, your account will be automatically deleted.`
-        );
-
-      return { embed, action };
-    } catch (err) {
-      throw err;
-    }
+    return {
+      username,
+      level: user.level,
+      xp: user.xp,
+      nextXp: user.nextXp,
+      gold: user.gold,
+      squadCount: user.heroOwned.length,
+      totalPower,
+    };
   }
 
-  static buildDeleteAccountDeletedResponse() {
-    return new EmbedBuilder()
-      .setTitle("Good bye :(")
-      .setDescription(
-        `We appreciate your time playing!
-      To help us improve, would you mind sharing some feedback here:
-      link to feedback form: https://www.feedback.com`
-      )
-      .setColor(colors.sky);
+  static async isRegistered(discordId: string) {
+    const user = await new UserModel().getUserByIdOrDiscordId({ discordId });
+    return Boolean(user);
   }
 
-  static buildDeleteAccountCanceledResponse() {
-    return new EmbedBuilder()
-      .setTitle(":)")
-      .setDescription(
-        `Thanks for keeping your account! Any feedback?
-      https://feedback.com`
-      )
-      .setColor(colors.sky);
+  static async deleteUser(discordId: string) {
+    return await new UserModel().delete({ discordId });
   }
 
-  static buildDeleteAccountAction() {
-    const confirm = new ButtonBuilder()
-      .setCustomId("confirm")
-      .setLabel("Yes, delete my account.")
-      .setStyle(ButtonStyle.Primary);
+  private static async _grantStarterHero(userId: string) {
+    const heroModel = new HeroModel();
+    const commonHeroes = await heroModel.model.findMany({
+      where: { rarity: HeroRarity.Common },
+    });
 
-    const cancel = new ButtonBuilder()
-      .setCustomId("cancel")
-      .setLabel("No, I don't")
-      .setStyle(ButtonStyle.Danger);
+    if (!commonHeroes.length) return null;
 
-    const actions = new ActionRowBuilder<ButtonBuilder>().addComponents(
-      confirm,
-      cancel
-    );
+    const starter =
+      commonHeroes[Math.floor(Math.random() * commonHeroes.length)];
 
-    return actions;
+    await new UserHeroModel().assignHero({ userId, hero: starter });
+
+    return starter.name;
   }
 }
+
+export { SQUAD_LIMIT };

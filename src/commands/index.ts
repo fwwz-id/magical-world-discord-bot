@@ -3,6 +3,9 @@ import { default as hero } from "./hero";
 import { default as profile } from "./profile";
 import { default as join } from "./join";
 import { default as delete_account } from "./delete-account";
+import { default as help } from "./help";
+import { default as my_heroes } from "./my-heroes";
+import { default as quest } from "./quest";
 
 const commands = {
   "delete-account": delete_account,
@@ -10,6 +13,9 @@ const commands = {
   hero,
   profile,
   join,
+  help,
+  "my-heroes": my_heroes,
+  quest,
 };
 
 export type ExportCommandsKey = keyof typeof commands;

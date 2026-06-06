@@ -5,6 +5,7 @@ import BotClient from "@lib/bot";
 import CommandsHandler from "@lib/commands-handler";
 
 import BaseCommand from "@base/BaseCommand";
+import questCommand from "@commands/quest";
 
 const bot = new BotClient();
 const commandsHandler = new CommandsHandler();
@@ -18,6 +19,14 @@ bot.client.once("ready", (client) => {
 });
 
 bot.client.on("interactionCreate", async (interaction) => {
+  if (interaction.isButton()) {
+    if (interaction.customId.startsWith("quest:daily:claim:")) {
+      await questCommand.handleDailyClaimButton(interaction);
+    }
+
+    return;
+  }
+
   if (!interaction.isChatInputCommand()) return;
 
   const command = commands.get(interaction.commandName);

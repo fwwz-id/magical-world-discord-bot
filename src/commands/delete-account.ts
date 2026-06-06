@@ -1,5 +1,5 @@
 import BaseCommand from "@base/BaseCommand";
-import UserModel from "@features/user/UserModel";
+import UserService from "@features/user/UserService";
 import UserResponse from "@features/user/UserResponse";
 import {
   type CacheType,
@@ -23,12 +23,10 @@ class DeleteAccountCommand extends BaseCommand {
     const user = interaction.user;
     const { embed, action } =
       await UserResponse.getDeleteAccountConfirmationResponse(user.id);
-    const userModel = new UserModel();
-
     const shouldDelete = !action ? false : true;
 
     const deleteUserResponse = async () => {
-      const deletedUser = await userModel.delete({ discordId: user.id });
+      const deletedUser = await UserService.deleteUser(user.id);
       if (deletedUser) {
         await interaction.editReply({
           embeds: [UserResponse.getDeleteAccountDeletedResponse()],

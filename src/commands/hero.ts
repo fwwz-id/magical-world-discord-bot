@@ -7,6 +7,9 @@ import {
 
 import BaseCommand from "@base/BaseCommand";
 import HeroResponse from "@features/hero/HeroResponse";
+import QuestService from "@features/quest/QuestService";
+
+const questService = new QuestService();
 
 class HeroCommand extends BaseCommand {
   data() {
@@ -30,6 +33,8 @@ class HeroCommand extends BaseCommand {
   }
 
   async interact(interaction: ChatInputCommandInteraction<CacheType>) {
+    await questService.trackMission(interaction.user.id, 2);
+
     const response = new HeroResponse(interaction);
     const heroes = await response.getResponse();
 
