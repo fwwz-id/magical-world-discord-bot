@@ -102,10 +102,24 @@ class QuestCommand extends BaseCommand {
       return;
     }
 
+    const board = await questService.getDailyBoard(interaction.user.id);
+    const claimEmbed = QuestResponse.buildClaimResult(
+      missionId,
+      result.progression
+    );
+
+    if (board) {
+      const { embed, rows } = QuestResponse.buildDailyBoard(board);
+
+      await interaction.update({
+        embeds: [embed, claimEmbed],
+        components: rows.length ? rows : [],
+      });
+      return;
+    }
+
     await interaction.reply({
-      embeds: [
-        QuestResponse.buildClaimResult(missionId, result.progression),
-      ],
+      embeds: [claimEmbed],
       ephemeral: true,
     });
   }

@@ -17,7 +17,11 @@ export type DailyBoard = {
 };
 
 export default class QuestService {
-  private model = new QuestModel();
+  private model: QuestModel;
+
+  constructor(model = new QuestModel()) {
+    this.model = model;
+  }
 
   async requireUser(discordId: string) {
     return await this.model.getUserByDiscordId(discordId);

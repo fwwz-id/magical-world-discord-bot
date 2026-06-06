@@ -157,7 +157,8 @@ export default class QuestResponse {
           name: "Status",
           value: "Combat system — in development",
         }
-      );
+      )
+      .setFooter({ text: "Combat system — in development" });
   }
 
   private static _missionStatus(mission: DailyMissionStatus) {
